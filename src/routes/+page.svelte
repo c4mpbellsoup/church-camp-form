@@ -3,11 +3,10 @@
 	import { resolve } from '$app/paths';
 	import {
 		ACCOMMODATION_TYPES,
-		APPS_SCRIPT_URL,
-		EXPECTED_PARTICIPANTS,
 		RATES,
 		SATURDAY_DINNER_RATE,
 	} from '$lib/consts';
+	import { showToast } from '$lib/services/toasts.svelte';
 	import type {
 		AccommodationCosts,
 		DayTripCosts,
@@ -16,14 +15,14 @@
 	} from '$lib/types';
 	import { tick } from 'svelte';
 	import AccommodationCard from './(cards)/AccommodationCard.svelte';
-	import BunkmatesDetailsCard from './(cards)/BunkmatesDetailsCard.svelte';
+	import BookingForCard from './(cards)/BookingForCard.svelte';
+	import BunkingWithCard from './(cards)/BunkingWithCard.svelte';
+	import BunkmateDetailsCard from './(cards)/BunkmateDetailsCard.svelte';
 	import FamilyDetailsCard from './(cards)/FamilyDetailsCard.svelte';
 	import MyDetailsCard from './(cards)/MyDetailsCard.svelte';
 	import OtherCard from './(cards)/OtherCard.svelte';
-	import StayingWithCard from './(cards)/StayingWithCard.svelte';
 	import SummaryCard from './(cards)/SummaryCard.svelte';
 	import WelcomeCard from './(cards)/WelcomeCard.svelte';
-	import { showToast } from '$lib/services/toasts.svelte';
 
 	let formState: FormState = $state({
 		stepIndex: 0,
@@ -35,8 +34,8 @@
 		familyName: '',
 		emailAddress: '',
 		mobileNumber: '',
-		payingFor: '',
-		sharingWith: 'nobody',
+		bookingFor: '',
+		bunkingWith: 'nobody',
 		familyMembers: [
 			{
 				name: '',
@@ -70,14 +69,17 @@
 	});
 
 	let accommodationCosts: AccommodationCosts = $state({
-		additionalAdults: 0,
-		additionalChildren: 0,
+		numAdults: 0,
+		numTeens: 0,
+		numChildren: 0,
+		numInfants: 0,
 
 		total: {
 			nightly: {
-				room: 0,
-				additionalAdults: 0,
-				additionalChildren: 0,
+				forAdults: 0,
+				forTeens: 0,
+				forChildren: 0,
+				forInfants: 0,
 				total: 0,
 			},
 
@@ -86,9 +88,10 @@
 
 		split: {
 			nightly: {
-				room: 0,
-				additionalAdults: 0,
-				additionalChildren: 0,
+				forAdults: 0,
+				forTeens: 0,
+				forChildren: 0,
+				forInfants: 0,
 				total: 0,
 			},
 
@@ -105,14 +108,16 @@
 	});
 
 	let steps = $derived.by(() => {
-		let steps = [WelcomeCard, MyDetailsCard, StayingWithCard];
+		let steps = [WelcomeCard, MyDetailsCard, BookingForCard];
 
-		if (formValues.payingFor === 'family') {
+		if (formValues.bookingFor === 'family') {
 			steps.push(FamilyDetailsCard);
 		}
 
-		if (formValues.sharingWith === 'friends') {
-			steps.push(BunkmatesDetailsCard);
+		steps.push(BunkingWithCard);
+
+		if (formValues.bunkingWith === 'friends') {
+			steps.push(BunkmateDetailsCard);
 		}
 
 		steps.push(AccommodationCard);
@@ -131,12 +136,12 @@
 			type: 'info',
 		});
 
-		await fetch(APPS_SCRIPT_URL, {
-			redirect: 'follow',
-			method: 'POST',
-			headers: { 'Content-Type': 'text/plain' },
-			body: JSON.stringify($state.snapshot(formValues)),
-		});
+		// await fetch(APPS_SCRIPT_URL, {
+		// 	redirect: 'follow',
+		// 	method: 'POST',
+		// 	headers: { 'Content-Type': 'text/plain' },
+		// 	body: JSON.stringify($state.snapshot(formValues)),
+		// });
 
 		goto(resolve('/form-submitted'));
 	};
@@ -159,7 +164,7 @@
 		}
 
 		let familyCount = 1;
-		if (formValues.payingFor === 'family') {
+		if (formValues.bookingFor === 'family') {
 			familyCount += formValues.familyMembers.length;
 		}
 
@@ -201,81 +206,64 @@
 		);
 
 		// calculate party details
+		let myInfantsCount = 0;
 		let myChildrenCount = 0;
+		let myTeensCount = 0;
 		let myAdultsCount = 1;
-		if (formValues.payingFor === 'family') {
+		if (formValues.bookingFor === 'family') {
 			const family = formValues.familyMembers;
+			myInfantsCount += family.filter((m) => m.ageGroup === 'infant').length;
 			myChildrenCount += family.filter((m) => m.ageGroup === 'child').length;
-			myAdultsCount += family.length - myChildrenCount;
+			myTeensCount += family.filter((m) => m.ageGroup === 'teen').length;
+			myAdultsCount += family.filter((m) => m.ageGroup === 'adult').length;
 		}
 
+		let infantsCount = 0;
 		let childrenCount = 0;
+		let teensCount = 0;
 		let adultsCount = 0;
-		if (formValues.sharingWith === 'friends') {
+		if (formValues.bunkingWith === 'friends') {
 			const friends = formValues.bunkmates;
+			infantsCount += friends.filter((m) => m.ageGroup === 'infant').length;
 			childrenCount += friends.filter((m) => m.ageGroup === 'child').length;
-			adultsCount += friends.length - childrenCount;
+			teensCount += friends.filter((m) => m.ageGroup === 'teen').length;
+			adultsCount += friends.filter((m) => m.ageGroup === 'adult').length;
 		}
 
-		const bunkmates = adultsCount + childrenCount > 0;
 		adultsCount += myAdultsCount;
+		teensCount += myTeensCount;
 		childrenCount += myChildrenCount;
+		infantsCount += myInfantsCount;
 
-		// calculate additional occupants (beyond 2)
-		let additionalAdultsCount = adultsCount;
-		let additionalChildrenCount = childrenCount;
-		for (let i = 0; i < 2; i++) {
-			if (additionalAdultsCount > 0) additionalAdultsCount--;
-			else if (additionalChildrenCount > 0) additionalChildrenCount--;
-		}
+		accommodationCosts.numAdults = adultsCount;
+		accommodationCosts.numTeens = teensCount;
+		accommodationCosts.numChildren = childrenCount;
+		accommodationCosts.numInfants = infantsCount;
 
 		// calculate nightly rates
-		// nightly room rate
-		nightlyRates.room = accommodation!.rate;
-		myNightlyRates.room = accommodation!.rate;
-
-		// nightly room rate for user if splitting
-		if (bunkmates) {
-			const perAdultRate = nightlyRates.room / adultsCount;
-			myNightlyRates.room = Math.ceil(perAdultRate * myAdultsCount);
-		}
-
-		// nightly additional occupants rates
-		accommodationCosts.additionalAdults = additionalAdultsCount;
-		accommodationCosts.additionalChildren = additionalChildrenCount;
-		nightlyRates.additionalAdults =
-			additionalAdultsCount * RATES.nightly.additionalAdult;
-		nightlyRates.additionalChildren =
-			additionalChildrenCount * RATES.nightly.additionalChild;
-		myNightlyRates.additionalAdults = nightlyRates.additionalAdults;
-		myNightlyRates.additionalChildren = nightlyRates.additionalChildren;
-
-		// nightly additional occupants rates for user if splitting
-		if (bunkmates) {
-			if (nightlyRates.additionalAdults) {
-				const perAdult = nightlyRates.additionalAdults / adultsCount;
-				myNightlyRates.additionalAdults = Math.ceil(perAdult * myAdultsCount);
-			}
-
-			if (nightlyRates.additionalChildren && childrenCount) {
-				const perChild = nightlyRates.additionalChildren / childrenCount;
-				myNightlyRates.additionalChildren = Math.ceil(
-					perChild * myChildrenCount
-				);
-			}
-		}
+		// nightly room rate per age group
+		nightlyRates.forAdults = accommodation!.adultRate * adultsCount;
+		nightlyRates.forTeens = accommodation!.teenRate * teensCount;
+		nightlyRates.forChildren = accommodation!.childRate * childrenCount;
+		nightlyRates.forInfants = accommodation!.infantRate * infantsCount;
+		myNightlyRates.forAdults = accommodation!.adultRate * myAdultsCount;
+		myNightlyRates.forTeens = accommodation!.teenRate * myTeensCount;
+		myNightlyRates.forChildren = accommodation!.childRate * myChildrenCount;
+		myNightlyRates.forInfants = accommodation!.infantRate * myInfantsCount;
 
 		// nightly rate
 		nightlyRates.total =
-			nightlyRates.room +
-			nightlyRates.additionalAdults +
-			nightlyRates.additionalChildren;
+			nightlyRates.forAdults +
+			nightlyRates.forTeens +
+			nightlyRates.forChildren +
+			nightlyRates.forInfants;
 
 		// nightly rate for user
 		myNightlyRates.total =
-			myNightlyRates.room +
-			myNightlyRates.additionalAdults +
-			myNightlyRates.additionalChildren;
+			myNightlyRates.forAdults +
+			myNightlyRates.forTeens +
+			myNightlyRates.forChildren +
+			myNightlyRates.forInfants;
 
 		// total costs
 		accommodationCosts.total.total =
@@ -318,9 +306,10 @@
 	function resetCosts(): void {
 		accommodationCosts.total = {
 			nightly: {
-				room: 0,
-				additionalAdults: 0,
-				additionalChildren: 0,
+				forAdults: 0,
+				forTeens: 0,
+				forChildren: 0,
+				forInfants: 0,
 				total: 0,
 			},
 			total: 0,
@@ -328,9 +317,10 @@
 
 		accommodationCosts.split = {
 			nightly: {
-				room: 0,
-				additionalAdults: 0,
-				additionalChildren: 0,
+				forAdults: 0,
+				forTeens: 0,
+				forChildren: 0,
+				forInfants: 0,
 				total: 0,
 			},
 			total: 0,

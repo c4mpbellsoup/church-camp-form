@@ -147,10 +147,10 @@
 			</figure>
 		{/if}
 		<div class="card-body gap-4 relative">
-			<div class="step" class:shadow-sm={active}>
+			<div class="step invisible md:visible" class:shadow-sm={active}>
 				{#if active}<Icon size="16" />{/if}
 			</div>
-			<div class="step-bar"></div>
+			<div class="step-bar invisible md:visible"></div>
 			<h2 class="card-title">{title}</h2>
 			{#if active}
 				{@render children?.()}

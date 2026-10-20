@@ -78,8 +78,8 @@
 			class="input"
 		/>
 		<p class="label whitespace-normal">
-			This applies to the catered meal on Saturday night.<br />
-			All other meals will be self-catered.
+			This applies to the catered meal on Saturday night. All other meals will
+			be self-catered.
 		</p>
 	</div>
 
@@ -89,7 +89,6 @@
 		<textarea
 			id="notes"
 			bind:value={formValues.notes}
-			class="textarea w-full resize-none"
-		></textarea>
+			class="textarea w-full resize-none"></textarea>
 	</div>
 </FormCard>

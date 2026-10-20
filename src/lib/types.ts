@@ -2,10 +2,7 @@
 // alphabetical order
 
 export type AccommodationType =
-	| 'Powered Site'
-	| 'Bunk Room'
-	| 'Lakeside Cabin'
-	| 'Family Room (Unit)';
+	'Powered Site' | 'Bunk Room' | 'Lakeside Cabin' | 'Family Room (Unit)';
 
 export type ArrivalTime =
 	| 'Friday Evening'
@@ -19,15 +16,17 @@ export type DepartureTime =
 	| 'Sunday Morning'
 	| 'Sunday Afternoon';
 
-export type PayingFor = 'myself' | 'family';
+export type BookingFor = 'myself' | 'family';
 
 export type Validator = (value: string) => string | null;
 
-export type SharingWith = 'nobody' | 'friends' | 'anyone';
+export type BunkingWith = 'nobody' | 'friends' | 'anyone';
 
 export interface AccommodationCosts {
-	additionalAdults: number;
-	additionalChildren: number;
+	numAdults: number;
+	numTeens: number;
+	numChildren: number;
+	numInfants: number;
 	total: CostBreakdown;
 	split: CostBreakdown;
 }
@@ -79,8 +78,8 @@ export interface FormValues {
 	familyName: string;
 	emailAddress: string;
 	mobileNumber: string;
-	payingFor: PayingFor | '';
-	sharingWith: SharingWith | '';
+	bookingFor: BookingFor | '';
+	bunkingWith: BunkingWith | '';
 	familyMembers: Bunkmate[];
 	bunkmates: Bunkmate[];
 	arrivalTime: ArrivalTime;
@@ -110,14 +109,15 @@ export interface Option<T> {
 
 interface Bunkmate {
 	name: string;
-	ageGroup: 'adult' | 'child';
+	ageGroup: 'adult' | 'teen' | 'child' | 'infant';
 }
 
 interface CostBreakdown {
 	nightly: {
-		room: number;
-		additionalAdults: number;
-		additionalChildren: number;
+		forAdults: number;
+		forTeens: number;
+		forChildren: number;
+		forInfants: number;
 		total: number; // total per night
 	};
 	total: number; // total for stay

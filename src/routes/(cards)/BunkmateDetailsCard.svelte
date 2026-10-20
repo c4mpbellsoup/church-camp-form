@@ -2,7 +2,7 @@
 	import FormCard from '$lib/components/FormCard.svelte';
 	import type { CardProps, FormControl } from '$lib/types';
 	import { required } from '$lib/validators';
-	import { Plus, Trash, Users } from '@lucide/svelte';
+	import { Plus, Trash, UserGroup } from '@lucide/svelte';
 
 	let {
 		formValues = $bindable(),
@@ -39,8 +39,8 @@
 </script>
 
 <FormCard
-	Icon={Users}
-	title="Bunkmates Details"
+	Icon={UserGroup}
+	title="Bunkmate Details"
 	controls={formControls}
 	{active}
 	{visited}
@@ -48,10 +48,13 @@
 	{onnext}
 >
 	<p class="mb-2">
-		Add the details for any friends
-		{formValues.payingFor === 'family' ? '(outside your family)' : ''}
-		who will be sharing your accommodation. Use the + (plus) button below to add
-		bunkmates.
+		Add the details for any friends who will be sharing your accommodation. Use
+		the + (plus) button below to add bunkmates.
+		<strong>
+			Do not include yourself{formValues.bookingFor === 'family'
+				? ' or your family'
+				: ''}.
+		</strong>
 	</p>
 
 	<div class="flex flex-col items-end gap-2">
@@ -77,10 +80,12 @@
 						id="bunkmate-{i}-age"
 						bind:value={formValues.bunkmates[i].ageGroup}
 						onchange={() => calculateCosts!()}
-						class="select"
+						class="select min-w-32"
 					>
 						<option value="adult">Adult</option>
-						<option value="child">Child (Under 18)</option>
+						<option value="teen">Year 7-12</option>
+						<option value="child">Year K-6</option>
+						<option value="infant">Infant</option>
 					</select>
 				</div>
 				<button
