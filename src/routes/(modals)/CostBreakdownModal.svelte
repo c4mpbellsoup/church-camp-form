@@ -193,7 +193,7 @@
 					<tr class="bg-base-200">
 						<td colspan={bunkmates ? 5 : 4}>
 							<strong>Shared</strong><br />
-							The Lakeside Hall booking cost, Saturday dinner and our speaker costs
+							The Lakeside Hall booking cost, Saturday dinner and our speaker costs (accommodation and fuel)
 							are a per-person contribution.
 						</td>
 					</tr>
