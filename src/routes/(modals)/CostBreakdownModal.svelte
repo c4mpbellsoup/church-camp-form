@@ -1,7 +1,7 @@
 <script lang="ts">
 	import {
 		ACCOMMODATION_TYPES,
-		EXPECTED_PARTICIPANTS,
+		HALL_HIRE_RATE,
 		RATES,
 		SATURDAY_DINNER_RATE,
 	} from '$lib/consts';
@@ -36,11 +36,7 @@
 		)
 	);
 
-	// const lakesideHallRate = $derived(
-	// 	(RATES.nightly.lakesideHall * 2) / EXPECTED_PARTICIPANTS
-	// );
-
-	// const lakesideHallTotal = $derived(lakesideHallRate * familySize);
+	const lakesideHallTotal = $derived(HALL_HIRE_RATE * familySize);
 	const saturdayDinnerTotal = $derived(
 		SATURDAY_DINNER_RATE * (formValues.sharingDinner ? familySize : 0)
 	);
@@ -192,19 +188,19 @@
 					<tr class="bg-base-200">
 						<td colspan={bunkmates ? 5 : 4}>
 							<strong>Shared</strong><br />
-							<!-- The Lakeside Hall booking cost is estimated based on expected attendance. -->
-							Saturday dinner is a per-person contribution.
+							The Lakeside Hall booking cost and Saturday dinner are a per-person
+							contribution.
 						</td>
 					</tr>
-					<!-- <tr>
+					<tr>
 						<td>Lakeside Hall</td>
-						<td>{toCost(lakesideHallRate)}</td>
+						<td>{toCost(HALL_HIRE_RATE)}</td>
 						<td>{familySize}</td>
-						<td></td>
+						{#if bunkmates}<td></td>{/if}
 						<td class="bg-primary/5">
 							{toCost(lakesideHallTotal)}
 						</td>
-					</tr> -->
+					</tr>
 					<tr>
 						<td>Saturday Dinner</td>
 						<td>{toCost(SATURDAY_DINNER_RATE)}</td>
@@ -214,12 +210,6 @@
 							{toCost(saturdayDinnerTotal)}
 						</td>
 					</tr>
-					<!-- <tr>
-						<th colspan={bunkmates ? 4 : 3}>Total</th>
-						<th class="bg-primary/5 border border-primary">
-							${formValues.costs.sharedTotal}
-						</th>
-					</tr> -->
 					<tr>
 						<th colspan={bunkmates ? 4 : 3}>Grand Total</th>
 						<th class="bg-primary border border-primary text-primary-content">

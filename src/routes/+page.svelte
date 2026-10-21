@@ -3,6 +3,8 @@
 	import { resolve } from '$app/paths';
 	import {
 		ACCOMMODATION_TYPES,
+		APPS_SCRIPT_URL,
+		HALL_HIRE_RATE,
 		RATES,
 		SATURDAY_DINNER_RATE,
 	} from '$lib/consts';
@@ -136,12 +138,12 @@
 			type: 'info',
 		});
 
-		// await fetch(APPS_SCRIPT_URL, {
-		// 	redirect: 'follow',
-		// 	method: 'POST',
-		// 	headers: { 'Content-Type': 'text/plain' },
-		// 	body: JSON.stringify($state.snapshot(formValues)),
-		// });
+		await fetch(APPS_SCRIPT_URL, {
+			redirect: 'follow',
+			method: 'POST',
+			headers: { 'Content-Type': 'text/plain' },
+			body: JSON.stringify($state.snapshot(formValues)),
+		});
 
 		goto(resolve('/form-submitted'));
 	};
@@ -168,9 +170,10 @@
 			familyCount += formValues.familyMembers.length;
 		}
 
-		formValues.costs.sharedTotal = formValues.sharingDinner
-			? SATURDAY_DINNER_RATE * familyCount
-			: 0;
+		formValues.costs.sharedTotal = HALL_HIRE_RATE * familyCount;
+		if (formValues.sharingDinner) {
+			formValues.costs.sharedTotal += SATURDAY_DINNER_RATE * familyCount;
+		}
 
 		formValues.costs.grandTotal =
 			formValues.costs.accommodationSplit +

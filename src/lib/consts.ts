@@ -11,8 +11,8 @@ import type {
 } from './types';
 
 export const APPS_SCRIPT_URL =
-	'https://script.google.com/macros/s/AKfycbw_KcHVShBl2peMHe2H0_B_AsA6gpE7Jb43lq6wivgtXxH0z5eoFIHMTB5Vf8MBEc5KZA/exec';
-export const EXPECTED_PARTICIPANTS = 40;
+	'https://script.google.com/macros/s/AKfycbzWx9KekCZAHKd3R1fc4x77yWijXMOfDiUhiglQKUi0KOcO49cxAE973kJKRMYs7MOSdA/exec';
+export const HALL_HIRE_RATE = 10;
 export const SATURDAY_DINNER_RATE = 8;
 
 export const ACCOMMODATION_TYPES: {
@@ -84,10 +84,6 @@ export const DEPARTURE_TIMES: DepartureTime[] = [
 ];
 
 export const RATES = {
-	nightly: {
-		lakesideHall: 200,
-	},
-
 	daily: {
 		individual: 5,
 		family: 15,
