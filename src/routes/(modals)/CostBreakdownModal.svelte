@@ -193,8 +193,8 @@
 					<tr class="bg-base-200">
 						<td colspan={bunkmates ? 5 : 4}>
 							<strong>Shared</strong><br />
-							The Lakeside Hall booking cost, Saturday dinner and our speaker costs (accommodation and fuel)
-							are a per-person contribution.
+							The Lakeside Hall booking cost, Saturday dinner and our speaker costs
+							(accommodation and fuel) are a per-person contribution.
 						</td>
 					</tr>
 					<tr>
@@ -225,7 +225,7 @@
 						</td>
 					</tr>
 					<tr>
-						<th colspan="3">Total</th>
+						<th colspan={bunkmates ? 4 : 3}>Total</th>
 						<th class="bg-primary/5 border border-primary">${sharedTotal}</th>
 					</tr>
 					<tr class="bg-base-200">
