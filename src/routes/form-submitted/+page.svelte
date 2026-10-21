@@ -4,14 +4,13 @@
 
 <div class="flex items-center justify-center h-screen w-screen fixed z-2">
 	<div class="flex flex-col gap-4 items-center p-4 backdrop-blur-xs">
-		<TentTree size={128} />
 		<h1 class="text-3xl font-bold mt-8">Form Submitted</h1>
 		<p class="text-center">
 			Thank you for taking the time, your response has been successfully
 			submitted!<br />
 			Expect an email with extra details shortly.
 		</p>
-		<p>(you can close this tab now)</p>
+		<p>You can close this tab now.</p>
 	</div>
 </div>
 
@@ -26,7 +25,7 @@
 	.background {
 		animation: slide 64s linear infinite;
 		height: 200vh;
-		opacity: 0.05;
+		opacity: 0.03;
 		position: fixed;
 		transform: rotate(-15deg);
 		width: 400vw;
