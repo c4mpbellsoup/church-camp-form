@@ -7,6 +7,7 @@
 		HALL_HIRE_RATE,
 		RATES,
 		SATURDAY_DINNER_RATE,
+		SPEAKER_RATE,
 	} from '$lib/consts';
 	import { showToast } from '$lib/services/toasts.svelte';
 	import type {
@@ -170,7 +171,8 @@
 			familyCount += formValues.familyMembers.length;
 		}
 
-		formValues.costs.sharedTotal = HALL_HIRE_RATE * familyCount;
+		formValues.costs.sharedTotal =
+			(HALL_HIRE_RATE + SPEAKER_RATE) * familyCount;
 		if (formValues.sharingDinner) {
 			formValues.costs.sharedTotal += SATURDAY_DINNER_RATE * familyCount;
 		}

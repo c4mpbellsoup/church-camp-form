@@ -4,6 +4,7 @@
 		HALL_HIRE_RATE,
 		RATES,
 		SATURDAY_DINNER_RATE,
+		SPEAKER_RATE,
 	} from '$lib/consts';
 	import type {
 		AccommodationCosts,
@@ -39,6 +40,10 @@
 	const lakesideHallTotal = $derived(HALL_HIRE_RATE * familySize);
 	const saturdayDinnerTotal = $derived(
 		SATURDAY_DINNER_RATE * (formValues.sharingDinner ? familySize : 0)
+	);
+	const speakerTotal = $derived(SPEAKER_RATE * familySize);
+	const sharedTotal = $derived(
+		lakesideHallTotal + saturdayDinnerTotal + speakerTotal
 	);
 
 	const toCost = (cost: number): string => (cost ? `$${cost}` : '-');
@@ -188,8 +193,8 @@
 					<tr class="bg-base-200">
 						<td colspan={bunkmates ? 5 : 4}>
 							<strong>Shared</strong><br />
-							The Lakeside Hall booking cost and Saturday dinner are a per-person
-							contribution.
+							The Lakeside Hall booking cost, Saturday dinner and our speaker costs
+							are a per-person contribution.
 						</td>
 					</tr>
 					<tr>
@@ -211,6 +216,19 @@
 						</td>
 					</tr>
 					<tr>
+						<td>Speaker</td>
+						<td>{toCost(SPEAKER_RATE)}</td>
+						<td>{familySize}</td>
+						{#if bunkmates}<td></td>{/if}
+						<td class="bg-primary/5">
+							{toCost(speakerTotal)}
+						</td>
+					</tr>
+					<tr>
+						<th colspan="3">Total</th>
+						<th class="bg-primary/5 border border-primary">${sharedTotal}</th>
+					</tr>
+					<tr class="bg-base-200">
 						<th colspan={bunkmates ? 4 : 3}>Grand Total</th>
 						<th class="bg-primary border border-primary text-primary-content">
 							${formValues.costs.grandTotal}

@@ -14,6 +14,7 @@ export const APPS_SCRIPT_URL =
 	'https://script.google.com/macros/s/AKfycbzWx9KekCZAHKd3R1fc4x77yWijXMOfDiUhiglQKUi0KOcO49cxAE973kJKRMYs7MOSdA/exec';
 export const HALL_HIRE_RATE = 10;
 export const SATURDAY_DINNER_RATE = 8;
+export const SPEAKER_RATE = 10;
 
 export const ACCOMMODATION_TYPES: {
 	name: AccommodationType;
