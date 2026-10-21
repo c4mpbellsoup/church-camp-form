@@ -11,14 +11,9 @@ const config = {
 			assets: 'build',
 			fallback: undefined,
 			precompress: false,
-			strict: true
+			strict: true,
 		}),
-		paths: {
-			base: process.argv.includes('dev')
-				? ''
-				: '/church-camp-form'
-		}
-	}
+	},
 };
 
 export default config;
