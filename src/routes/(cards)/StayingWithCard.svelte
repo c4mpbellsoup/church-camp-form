@@ -1,9 +1,9 @@
 <script lang="ts">
 	import FormCard from '$lib/components/FormCard.svelte';
-	import { PAYING_FOR_OPTIONS, SHARING_WITH_OPTIONS } from '$lib/consts';
+	import { BOOKING_FOR_OPTIONS, BUNKING_WITH_OPTIONS } from '$lib/consts';
 	import type { CardProps, FormControl } from '$lib/types';
 	import { required } from '$lib/validators';
-	import { Bed, BookOpenCheck } from '@lucide/svelte';
+	import { Bed } from '@lucide/svelte';
 
 	let {
 		formValues = $bindable(),
@@ -28,7 +28,7 @@
 		pronounCaps: string;
 		verb: string;
 	} = $derived(
-		!formValues.payingFor || formValues.payingFor === 'myself'
+		!formValues.bookingFor || formValues.bookingFor === 'myself'
 			? {
 					possessive: 'my',
 					pronoun: 'I',
@@ -66,13 +66,13 @@
 	>
 		<p class="label">I am paying for accommodation/site use for...</p>
 
-		{#each PAYING_FOR_OPTIONS as option}
+		{#each BOOKING_FOR_OPTIONS as option}
 			<div class="flex gap-2">
 				<input
 					type="radio"
 					id={option.value}
 					name="paying-for"
-					bind:group={formValues.payingFor}
+					bind:group={formValues.bookingFor}
 					onchange={() => calculateCosts!()}
 					value={option.value}
 					class="radio"
@@ -83,8 +83,8 @@
 	</div>
 
 	<p class="mb-2">
-		If you would like to split your room with some friends
-		{formValues.payingFor === 'family' ? ' outside of your family' : ''} you can
+		If you would like to share your room with some friends
+		{formValues.bookingFor === 'family' ? ' (in addition your family)' : ''} you can
 		specify that here. The costs of accommodation will be automatically calculated
 		and split between all parties sharing a room/site. The more bunkmates you have,
 		the cheaper the cost will be per person!
@@ -96,13 +96,13 @@
 			accommodation with...
 		</p>
 
-		{#each SHARING_WITH_OPTIONS as option}
+		{#each BUNKING_WITH_OPTIONS as option}
 			<div class="flex gap-2">
 				<input
 					type="radio"
 					id={option.value}
 					name="sharing-with"
-					bind:group={formValues.sharingWith}
+					bind:group={formValues.bunkingWith}
 					onchange={() => calculateCosts!()}
 					value={option.value}
 					class="radio"

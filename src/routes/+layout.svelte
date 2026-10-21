@@ -7,6 +7,7 @@
 </script>
 
 <svelte:head>
+	<title>Weekend Away Registration Form</title>
 	<link rel="icon" href={favicon} />
 </svelte:head>
 

@@ -1,8 +1,9 @@
 <script lang="ts">
 	import FormCard from '$lib/components/FormCard.svelte';
+	import { showToast } from '$lib/services/toasts.svelte';
 	import type { CardProps, FormControl } from '$lib/types';
 	import { required } from '$lib/validators';
-	import { Plus, Trash, Users } from '@lucide/svelte';
+	import { Plus, Trash, UserGroup } from '@lucide/svelte';
 
 	let {
 		formValues = $bindable(),
@@ -36,21 +37,39 @@
 		formValues.familyMembers.splice(index, 1);
 		calculateCosts!();
 	}
+
+	function validateSelfNotIncluded(): boolean {
+		for (const control of formControls) {
+			const value = (control.field! as HTMLInputElement).value;
+			if (!value.includes(formValues.givenName)) continue;
+
+			control.field!.classList.add('input-error');
+			showToast({
+				message: 'Please do not include yourself.',
+				type: 'warning',
+			});
+
+			return false;
+		}
+
+		return true;
+	}
 </script>
 
 <FormCard
-	Icon={Users}
+	Icon={UserGroup}
 	title="Family Details"
 	controls={formControls}
 	{active}
 	{visited}
 	{onback}
-	{onnext}
+	onnext={() => {
+		if (validateSelfNotIncluded()) onnext?.();
+	}}
 >
 	<p class="mb-2">
-		Add the details for your spouse/family here.<br />
-		Use the + (plus) button below to add family members.<br />
-		<strong>Do not include yourself.</strong>
+		Add the details for your spouse/family here. Use the + (plus) button below
+		to add family members. <strong>Do not include yourself.</strong>
 	</p>
 
 	<div class="flex flex-col items-end gap-2">
@@ -76,10 +95,12 @@
 						id="family-member-{i}-age"
 						bind:value={formValues.familyMembers[i].ageGroup}
 						onchange={() => calculateCosts!()}
-						class="select"
+						class="select min-w-32"
 					>
 						<option value="adult">Adult</option>
-						<option value="child">Child (Under 18)</option>
+						<option value="teen">Year 7-12</option>
+						<option value="child">Year K-6</option>
+						<option value="infant">Infant</option>
 					</select>
 				</div>
 				<button

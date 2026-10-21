@@ -20,11 +20,11 @@
 	}: CardProps = $props();
 
 	let bunkmatesCount = $derived(
-		formValues.sharingWith === 'friends' ? formValues.bunkmates.length : 0
+		formValues.bunkingWith === 'friends' ? formValues.bunkmates.length : 0
 	);
 
 	let familyCount = $derived(
-		formValues.payingFor === 'family' ? formValues.familyMembers.length : 0
+		formValues.bookingFor === 'family' ? formValues.familyMembers.length : 0
 	);
 
 	let partySize = $derived(1 + familyCount + bunkmatesCount);
@@ -117,8 +117,8 @@
 							<strong>Powered Site</strong> - campsite, shared camp bathroom + fridge
 						</li>
 						<li class="mb-1">
-							<strong>Bunk Room</strong> - private bathroom, shared camp fridge,
-							sleeps 9
+							<strong>Bunk Room</strong> - private bathroom, shared camp fridge, sleeps
+							9
 						</li>
 						<li class="mb-1">
 							<strong>Lakeside Cabin</strong> - private kitchen, bathroom + living
@@ -143,7 +143,10 @@
 			disabled={dayTrip}
 		>
 			{#each ACCOMMODATION_TYPES as type}
-				<option value={type.name} disabled={type.disabled || type.sleeps < partySize}>
+				<option
+					value={type.name}
+					disabled={type.disabled || type.sleeps < partySize}
+				>
 					{type.name}
 				</option>
 			{/each}
