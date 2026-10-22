@@ -24,5 +24,10 @@
 		<li>from the evening of <strong>Friday 29th Jan</strong></li>
 		<li>to the afternoon of <strong>Sunday 31st Jan</strong>.</li>
 	</ul>
+	<p>
+		This year's camp will be self-catered, with the exception of Saturday night
+		when dinner will be provided. Though, we still encourage you to bring your
+		food to the hall for meal times together.
+	</p>
 	<p>We look forward to seeing you there! Follow the prompts to register.</p>
 </FormCard>
